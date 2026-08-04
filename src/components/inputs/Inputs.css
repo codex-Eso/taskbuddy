@@ -1,0 +1,62 @@
+.formContainer {
+    background: url("../../assets/container.png") center/cover no-repeat;
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 102;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+}
+
+.formField {
+    margin-top: 15%;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formField label {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    color: black;
+    font-size: 24px;
+}
+
+.formField input {
+    font-family: 'Quicksand', sans-serif;
+    outline: none;
+    font-size: 18px;
+    padding: 6px;
+    background: transparent;
+    border: 3px solid black;
+    border-radius: 3px;
+    color: black;
+    font-weight: 600;
+}
+
+.formField button {
+    cursor: pointer;
+    font-size: large;
+    width: 30%;
+    display: grid;
+    place-self: center;
+    padding: 6px;
+    outline: none;
+}
+
+@media (max-width: 480px) {
+    .formContainer {
+        height: 340px;
+        width: 340px;
+    }
+
+    .formField {
+        width: 290px;
+        margin-top: 8%;
+    }
+}
