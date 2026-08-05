@@ -16,11 +16,13 @@ function TaskState({ taskDetails, containerRef, onSelect }: TaskStateProps) {
         if (taskRef.current && containerRef.current) {
             const container = containerRef.current.getBoundingClientRect();
             const taskEle = taskRef.current.getBoundingClientRect();
-            const x = Math.floor(Math.random() * (container.width - taskEle.width));
-            const y = Math.floor(Math.random() * (container.height - taskEle.height));
-            taskRef.current.style.position = "absolute";
-            taskRef.current.style.left = `${x}px`;
-            taskRef.current.style.top = `${y}px`;
+            if (container.width > 0 && container.height > 0) {
+                const x = Math.floor(Math.random() * (container.width - taskEle.width));
+                const y = Math.floor(Math.random() * (container.height - taskEle.height));
+                taskRef.current.style.position = "absolute";
+                taskRef.current.style.left = `${x}px`;
+                taskRef.current.style.top = `${y}px`;
+            }
             // console.log(container.height, container.width, taskEle.height, taskEle.width, taskRef.current.style.left, taskRef.current.style.top);
             //will implement a fixed random positioning soon :))
         }
@@ -37,7 +39,7 @@ function TaskState({ taskDetails, containerRef, onSelect }: TaskStateProps) {
     }, [isMobile]);
     return (
         <div id='taskState' title={taskDetails.title} ref={taskRef} onClick={onSelect}>
-            <img src={stickyNote} height={180} width={180} />
+            <img src={stickyNote} height={180} width={180} onLoad={reposition} />
             <h2>{taskDetails.title}</h2>
         </div>
     )
