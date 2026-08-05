@@ -6,11 +6,16 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
-    "allowJs": true
+    "allowJs": true,
+    "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "routes/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

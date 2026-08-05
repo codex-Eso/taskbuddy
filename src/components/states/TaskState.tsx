@@ -1,11 +1,11 @@
 import './State.css';
 import stickyNote from '../../assets/themes/notes/standard/orange.png';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Task } from '../tasksProp';
+import { Task } from '../tasksProp.js';
 
 interface TaskStateProps {
     taskDetails: Task;
-    containerRef: React.RefObject<HTMLDivElement>;
+    containerRef: React.RefObject<HTMLDivElement | null>;
     onSelect: () => void;
 }
 

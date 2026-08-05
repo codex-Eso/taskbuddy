@@ -1,21 +1,21 @@
 import './App.css';
-import EmptyState from './components/states/EmptyState';
+import EmptyState from './components/states/EmptyState.js';
 import { useState, useEffect, useRef } from 'react';
-import { api } from "../routes/axiosApi";
-import LoadingState from './components/states/LoadingState';
-import React from 'react';
-import { Task } from './components/tasksProp';
-import TaskState from './components/states/TaskState';
-import ActiveTaskState from './components/states/ActiveTaskState';
-import Buttons from './components/Buttons';
+import { api } from "../routes/axiosApi.js";
+import LoadingState from './components/states/LoadingState.js';
+import { Task } from './components/tasksProp.js';
+import TaskState from './components/states/TaskState.js';
+import ActiveTaskState from './components/states/ActiveTaskState.js';
+import Buttons from './components/Buttons.js';
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const hasRun = useRef<Boolean>(false);
-    const [isEmpty, setIsEmpty] = useState<Boolean | undefined>(undefined);
-    const [activeTask, setActiveTask] = useState<Task | false>(false);
-    const [loading, setLoading] = useState<Boolean>(true);
+    const hasRun = useRef<boolean>(false);
+    const [isEmpty, setIsEmpty] = useState<boolean | undefined>(undefined);
+    const [currentTask, setCurrentTask] = useState<Task | null>(null);
+    const [overlay, setOverlay] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
         const taskOnload = async () => {
             try {
@@ -46,10 +46,10 @@ function App() {
                     <div id='taskContainer' ref={containerRef}>
                         {isEmpty == true && <EmptyState />}
                         {isEmpty == false && tasks.map((task) => {
-                            return <TaskState key={task._id} taskDetails={task} containerRef={containerRef} onSelect={() => setActiveTask(task)} />
+                            return <TaskState key={task._id.toString()} taskDetails={task} containerRef={containerRef} onSelect={() => { setCurrentTask(task); setOverlay(true); }} />
                         })}
                     </div>
-                    {activeTask && <ActiveTaskState activeTask={activeTask} setActiveTask={setActiveTask} />}
+                    {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} />}
                     <Buttons />
                 </>}
         </>

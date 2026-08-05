@@ -3,23 +3,23 @@ import stickyNote from '../../assets/themes/notes/standard/orange.png';
 import Delete from '../../assets/icons/delete.png';
 import Complete from '../../assets/icons/complete.png';
 import Update from '../../assets/icons/update.png';
-import { Task } from '../tasksProp';
+import { Task } from '../tasksProp.js';
 import { ObjectId } from 'mongodb';
-import { api } from '../../../routes/axiosApi';
-import Overlay from '../Overlay';
+import { api } from '../../../routes/axiosApi.js';
 import { useEffect, useState } from 'react';
 import TaskInput from '../inputs/TaskInput.js';
+import Overlay from '../Overlay.js';
 
 interface ActiveTaskProps {
-    activeTask: Task;
-    setActiveTask: React.Dispatch<React.SetStateAction<boolean>>;
+    currentTask: Task | null;
+    setOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ActiveTaskState({ activeTask, setActiveTask }: ActiveTaskProps) {
-    const [active, setActive] = useState<"update" | false>(false);
+function ActiveTaskState({ currentTask, setOverlay }: ActiveTaskProps) {
+    const [activateEle, setActivateEle] = useState<"update" | null>(null);
     const [objectId, setObjectId] = useState<ObjectId | null>(null);
-    const [title, setTitle] = useState<String>("");
-    const [desc, setDesc] = useState<String>("");
+    const [title, setTitle] = useState<string>("");
+    const [desc, setDesc] = useState<string>("");
     const deleteTask = async (id: ObjectId) => {
         try {
             const res = await api.delete(`/tasks/${id}`);
@@ -41,28 +41,28 @@ function ActiveTaskState({ activeTask, setActiveTask }: ActiveTaskProps) {
         }
     };
     useEffect(() => {
-        setObjectId(activeTask._id);
-        setTitle(activeTask.title);
-        setDesc(activeTask.description);
+        setObjectId(currentTask!._id);
+        setTitle(currentTask!.title);
+        setDesc(currentTask!.description);
     }, [])
     return (
         <>
-            <Overlay setOverlay={setActiveTask} />
-            <div id='activeTask'>
+            <Overlay setOverlay={setOverlay} activateEle={setActivateEle} />
+            <div id='currentTask'>
                 <div id='taskDetails'>
                     <img src={stickyNote} height={280} width={280} />
                     <div id='detailsText'>
-                        <h2>{activeTask.title}</h2>
-                        <p>{activeTask.description}</p>
+                        <h2>{currentTask!.title}</h2>
+                        <p>{currentTask!.description}</p>
                     </div>
                 </div>
                 <div id='actionPngs'>
-                    <img className='png' src={Delete} title='Delete Task' onClick={() => deleteTask(activeTask._id)} />
-                    <img className='png' src={Complete} title='Mark As Completed' onClick={() => taskCompleted(activeTask._id)} />
-                    <img className='png' src={Update} title='Update Task' onClick={() => setActive('update')} />
+                    <img className='png' src={Delete} title='Delete Task' onClick={() => deleteTask(currentTask!._id)} />
+                    <img className='png' src={Complete} title='Mark As Completed' onClick={() => taskCompleted(currentTask!._id)} />
+                    <img className='png' src={Update} title='Update Task' onClick={() => setActivateEle('update')} />
                 </div>
             </div>
-            {active === 'update' && <TaskInput setActive={setActive} mode="Update" objectId={objectId} titleInput={title} descInput={desc} />}
+            {activateEle === 'update' && <TaskInput mode="Update" objectId={objectId} titleInput={title} descInput={desc} />}
         </>
     )
 }
