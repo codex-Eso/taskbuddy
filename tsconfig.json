@@ -13,7 +13,8 @@
   },
   "include": [
     "src/**/*",
-    "routes/**/*"
+    "routes/**/*",
+    "server.ts"
   ],
   "exclude": [
     "node_modules"
