@@ -2,12 +2,13 @@ import { useState } from 'react';
 import AddPng from '../assets/icons/add.png';
 import SettingsPng from '../assets/icons/settings.png';
 import ThemePng from '../assets/icons/theme.png';
-import TaskInput from './inputs/TaskInput';
-import Settings from './inputs/Settings';
-import Theme from './inputs/Theme';
+import TaskInput from './inputs/TaskInput.js';
+import Settings from './inputs/Settings.js';
+import Theme from './inputs/Theme.js';
 
 function Buttons() {
-    const [active, setActive] = useState<"theme" | "settings" | "add" | false>(false);
+    const [activeBtn, setActiveBtn] = useState<"theme" | "settings" | "add" | null>(null);
+    const [overlay, setOverlay] = useState<boolean>(false);
     return (
         <>
             <div id='buttons'>
@@ -16,12 +17,17 @@ function Buttons() {
                     <div className='image' title='Settings'><img src={SettingsPng} width={50} /></div>
                 </div>
                 <div id='rightBtns'>
-                    <div className='image' title='Add Task' onClick={() => setActive('add')}><img src={AddPng} width={50} /></div>
+                    <div className='image' title='Add Task' onClick={() => { setActiveBtn('add'); setOverlay(true); }}><img src={AddPng} width={50} /></div>
                 </div>
             </div>
-            {active === 'add' && <TaskInput setActive={setActive} mode="Add" />}
-            {active === 'settings' && <Settings />}
-            {active === 'theme' && <Theme />}
+            {
+                overlay &&
+                <>
+                    {activeBtn === 'add' && <TaskInput setOverlay={setOverlay} setActivateBtn={setActiveBtn} mode="Add" />}
+                    {activeBtn === 'settings' && <Settings />}
+                    {activeBtn === 'theme' && <Theme />}
+                </>
+            }
         </>
     )
 }

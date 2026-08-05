@@ -5,10 +5,10 @@
   "type": "module",
   "proxy": "http://localhost:4000",
   "scripts": {
-    "start": "node dist/server.ts",
+    "build": "vite build && tsc",
+    "start": "node dist/server.js",
     "frontend": "vite",
     "backend": "nodemon --exec ts-node --esm server.ts",
-    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

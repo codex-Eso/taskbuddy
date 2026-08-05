@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import Overlay from '../Overlay';
+import Overlay from '../Overlay.js';
 import './Inputs.css';
-import { api } from '../../../routes/axiosApi';
+import { api } from '../../../routes/axiosApi.js';
 import { ObjectId } from 'mongodb';
 
 interface TaskInputProps {
-    setActive: React.Dispatch<React.SetStateAction<boolean>>;
+    setOverlay?: React.Dispatch<React.SetStateAction<boolean>>;
+    setActivateBtn?: React.Dispatch<React.SetStateAction<"theme" | "settings" | "add" | null>>;
     mode: 'Add' | 'Update';
-    objectId?: ObjectId;
-    titleInput?: String;
-    descInput?: String;
+    objectId?: ObjectId | null;
+    titleInput?: string;
+    descInput?: string;
 }
 
-function TaskInput({ setActive, mode, objectId, titleInput, descInput }: TaskInputProps) {
-    const [title, setTitle] = useState<String>(titleInput ?? "");
-    const [desc, setDesc] = useState<String>(descInput ?? "");
+function TaskInput({ setOverlay, setActivateBtn, mode, objectId, titleInput, descInput }: TaskInputProps) {
+    const [title, setTitle] = useState<string>(titleInput ?? "");
+    const [desc, setDesc] = useState<string>(descInput ?? "");
     const inputTask = () => {
         if (title.trim() === "" || desc.trim() === "") {
             alert("Title & Description cannot be empty!");
@@ -26,7 +27,7 @@ function TaskInput({ setActive, mode, objectId, titleInput, descInput }: TaskInp
             }
         }
     };
-    const createTask = async (newTask: { title: String; description: String; }) => {
+    const createTask = async (newTask: { title: string; description: string; }) => {
         try {
             const res = await api.post(`/tasks`, { ...newTask, completed: false });
             alert(res.data.message);
@@ -36,7 +37,7 @@ function TaskInput({ setActive, mode, objectId, titleInput, descInput }: TaskInp
             alert("Something went wrong, please refresh.");
         }
     }
-    const updateTask = async (updatedTask: { title: String; description: String; }) => {
+    const updateTask = async (updatedTask: { title: string; description: string; }) => {
         try {
             const res = await api.patch(`/tasks/${objectId}`, { ...updatedTask });
             alert(res.data.message);
@@ -48,7 +49,7 @@ function TaskInput({ setActive, mode, objectId, titleInput, descInput }: TaskInp
     }
     return (
         <>
-            {mode === "Add" && <Overlay setOverlay={setActive} />}
+            {mode === "Add" && <Overlay setOverlay={setOverlay!} setActivateBtn={setActivateBtn!} />}
             <div className='formContainer'>
                 <div className='formField'>
                     <label htmlFor="titleInput">Title:</label>
