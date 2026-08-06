@@ -7,6 +7,7 @@ import { Task } from './components/tasksProp.js';
 import TaskState from './components/states/TaskState.js';
 import ActiveTaskState from './components/states/ActiveTaskState.js';
 import Buttons from './components/Buttons.js';
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -40,6 +41,7 @@ function App() {
     }, []);
     return (
         <>
+            <Analytics />
             {loading && <LoadingState />}
             {!loading &&
                 <>
