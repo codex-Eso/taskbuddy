@@ -1,6 +1,7 @@
 #emptyState,
 #taskState,
-#taskDetails {
+#taskDetails,
+#errorState {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,16 +9,27 @@
     flex-direction: column;
 }
 
-#emptyState {
+#emptyState,
+#errorState {
     height: 100%;
 }
 
 #emptyState h2,
 #taskState h2,
-#loadingState h2 {
+#loadingState h2,
+#errorState h2 {
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
     color: black;
+}
+
+#errorState h2 {
+    width: 80%;
+}
+
+#errorState span {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 #taskState h2 {
