@@ -8,6 +8,7 @@ import TaskState from './components/states/TaskState.js';
 import ActiveTaskState from './components/states/ActiveTaskState.js';
 import Buttons from './components/Buttons.js';
 import { Analytics } from "@vercel/analytics/react";
+import ErrorState from './components/states/ErrorState.js';
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,6 +18,7 @@ function App() {
     const [currentTask, setCurrentTask] = useState<Task | null>(null);
     const [overlay, setOverlay] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<boolean>(false);
     useEffect(() => {
         const taskOnload = async () => {
             try {
@@ -29,7 +31,7 @@ function App() {
                 }
             } catch (err) {
                 console.error(err);
-                alert("Something went wrong, please refresh.");
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -43,7 +45,8 @@ function App() {
         <>
             <Analytics />
             {loading && <LoadingState />}
-            {!loading &&
+            {error && <ErrorState />}
+            {(!loading && !error) &&
                 <>
                     <div id='taskContainer' ref={containerRef}>
                         {isEmpty == true && <EmptyState />}
