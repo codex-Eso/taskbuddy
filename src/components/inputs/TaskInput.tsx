@@ -29,7 +29,7 @@ function TaskInput({ setOverlay, setActivateBtn, mode, objectId, titleInput, des
     };
     const createTask = async (newTask: { title: string; description: string; }) => {
         try {
-            const res = await api.post(`/tasks`, { ...newTask, completed: false });
+            const res = await api.post(`/tasks`, { ...newTask, completed: false, in_progress: false });
             alert(res.data.message);
             window.location.reload();
         } catch (err) {
