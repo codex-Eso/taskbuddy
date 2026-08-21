@@ -9,20 +9,22 @@ import ActiveTaskState from './components/states/ActiveTaskState.js';
 import Buttons from './components/Buttons.js';
 import { Analytics } from "@vercel/analytics/react";
 import ErrorState from './components/states/ErrorState.js';
+import Dropdown from './components/Dropdown.js';
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const hasRun = useRef<boolean>(false);
     const [isEmpty, setIsEmpty] = useState<boolean | undefined>(undefined);
     const [currentTask, setCurrentTask] = useState<Task | null>(null);
     const [overlay, setOverlay] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [apiCall, setApiCall] = useState<string>("?completed=false");
     useEffect(() => {
         const taskOnload = async () => {
             try {
-                const res = await api.get("/tasks?completed=false");
+                const res = await api.get(`/tasks${apiCall}`);
                 setTasks(res.data);
                 if (res.data.length != 0) {
                     setIsEmpty(false);
@@ -36,11 +38,8 @@ function App() {
                 setLoading(false);
             }
         }
-        if (!hasRun.current) {
-            taskOnload();
-            hasRun.current = true;
-        }
-    }, []);
+        taskOnload();
+    }, [apiCall]);
     return (
         <>
             <Analytics />
@@ -48,13 +47,15 @@ function App() {
             {error && <ErrorState />}
             {(!loading && !error) &&
                 <>
+                    <Dropdown open={open} setOpen={setOpen} setApiCall={setApiCall} />
                     <div id='taskContainer' ref={containerRef}>
                         {isEmpty == true && <EmptyState />}
                         {isEmpty == false && tasks.map((task) => {
                             return <TaskState key={task._id.toString()} taskDetails={task} containerRef={containerRef} onSelect={() => { setCurrentTask(task); setOverlay(true); }} />
                         })}
                     </div>
-                    {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} />}
+                    {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} apiCall={apiCall} />}
+                    {apiCall === "?completed=true" && <span id='completedNote'>Note: All completed tasks stored will be deleted after 3 days</span>}
                     <Buttons />
                 </>}
         </>

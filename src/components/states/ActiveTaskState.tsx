@@ -1,45 +1,25 @@
 import './State.css';
 import stickyNote from '../../assets/themes/notes/standard/orange.png';
-import Delete from '../../assets/icons/delete.png';
-import Complete from '../../assets/icons/complete.png';
-import Update from '../../assets/icons/update.png';
 import { Task } from '../tasksProp.js';
 import { ObjectId } from 'mongodb';
-import { api } from '../../../routes/axiosApi.js';
 import { useEffect, useState } from 'react';
 import TaskInput from '../inputs/TaskInput.js';
 import Overlay from '../Overlay.js';
+import Incompleted from './actions/Incompleted.js';
+import InProgress from './actions/InProgress.js';
+import Completed from './actions/Completed.js';
 
 interface ActiveTaskProps {
     currentTask: Task | null;
     setOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+    apiCall: string;
 }
 
-function ActiveTaskState({ currentTask, setOverlay }: ActiveTaskProps) {
+function ActiveTaskState({ currentTask, setOverlay, apiCall }: ActiveTaskProps) {
     const [activateEle, setActivateEle] = useState<"update" | null>(null);
     const [objectId, setObjectId] = useState<ObjectId | null>(null);
     const [title, setTitle] = useState<string>("");
     const [desc, setDesc] = useState<string>("");
-    const deleteTask = async (id: ObjectId) => {
-        try {
-            const res = await api.delete(`/tasks/${id}`);
-            alert(res.data.message);
-            window.location.reload();
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong, please refresh.");
-        }
-    };
-    const taskCompleted = async (id: ObjectId) => {
-        try {
-            const res = await api.patch(`/tasks/${id}`, { "completed": true });
-            alert(res.data.message);
-            window.location.reload();
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong, please refresh.");
-        }
-    };
     useEffect(() => {
         setObjectId(currentTask!._id);
         setTitle(currentTask!.title);
@@ -56,11 +36,9 @@ function ActiveTaskState({ currentTask, setOverlay }: ActiveTaskProps) {
                         <p>{currentTask!.description}</p>
                     </div>
                 </div>
-                <div id='actionPngs'>
-                    <img className='png' src={Delete} title='Delete Task' onClick={() => deleteTask(currentTask!._id)} />
-                    <img className='png' src={Complete} title='Mark As Completed' onClick={() => taskCompleted(currentTask!._id)} />
-                    <img className='png' src={Update} title='Update Task' onClick={() => setActivateEle('update')} />
-                </div>
+                {apiCall === "?completed=false" && <Incompleted taskId={currentTask!._id} setActivateEle={setActivateEle} />}
+                {apiCall === "?in_progress=true" && <InProgress taskId={currentTask!._id} setActivateEle={setActivateEle} />}
+                {apiCall === "?completed=true" && <Completed taskId={currentTask!._id} />}
             </div>
             {activateEle === 'update' && <TaskInput mode="Update" objectId={objectId} titleInput={title} descInput={desc} />}
         </>

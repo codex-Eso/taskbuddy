@@ -52,12 +52,9 @@ body {
     background-color: whitesmoke;
     display: grid;
     place-items: center;
-    padding: 10px;
+    padding: 7px;
     border-radius: 50%;
     box-shadow: 0 30px 30px 0 rgba(0, 0, 0, 0.15);
-}
-
-#buttons img {
     pointer-events: auto;
     cursor: pointer;
 }
@@ -71,4 +68,61 @@ body {
 
 #leftBtns {
     gap: 20px;
+}
+
+#completedNote {
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    transform: translate(-50%);
+    font-weight: 500;
+}
+
+#dropdown {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 99;
+}
+
+#dropdown div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 8px;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    border: #6b6b6b 1px solid;
+    padding: 5px 0;
+    color: #6b6b6b;
+}
+
+#dropdown div :hover {
+    text-decoration: underline;
+}
+
+#dropdown button {
+    cursor: pointer;
+    font-size: large;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+}
+
+#dropdown span {
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    #dropdown button {
+        font-size: larger;
+    }
+
+    #dropdown span {
+        font-size: large;
+    }
 }

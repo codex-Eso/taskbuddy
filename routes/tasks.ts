@@ -5,7 +5,9 @@ import { z } from "zod";
 const TaskSchema = z.object({
     title: z.string(),
     description: z.string(),
-    completed: z.boolean()
+    completed: z.boolean(),
+    in_progress: z.boolean(),
+    completedAt: z.coerce.date().optional()
 });
 
 type TaskType = z.infer<typeof TaskSchema>;
@@ -18,8 +20,13 @@ export default function taskRoutes(db: Db) {
     router.get("/", async (req, res) => {
         try {
             const filter: any = {};
-            if (req.query.completed) {
-                filter.completed = req.query.completed == "true";
+            if (req.query.in_progress) {
+                filter.in_progress = req.query.in_progress === "true";
+            } else if (req.query.completed) {
+                filter.completed = req.query.completed === "true";
+                if (req.query.completed !== "true") {
+                    filter.in_progress = false;
+                }
             }
             const docs: TaskType[] = await tasks.find(filter).toArray();
             res.json(docs);
@@ -35,7 +42,7 @@ export default function taskRoutes(db: Db) {
                 return res.status(400).json(parseResult.error.issues);
             }
             const newTask: TaskType = parseResult.data;
-            const result = await tasks.insertOne(newTask);
+            await tasks.insertOne(newTask);
             res.json({ message: "Task Added!" });
         } catch (err) {
             res.status(500).send("Error creating task");
@@ -49,11 +56,19 @@ export default function taskRoutes(db: Db) {
                 return res.status(400).json(parseResult.error.issues);
             }
             const updatedTask: Partial<TaskType> = parseResult.data;
-            const result = await tasks.updateOne(
-                { _id: new ObjectId(req.params.id) },
-                { $set: updatedTask }
-            );
-            if (result.modifiedCount == 0) return res.json({ "message": "No task modified!" });
+            let result;
+            if (req.query.undo) {
+                result = await tasks.updateOne(
+                    { _id: new ObjectId(req.params.id) },
+                    { $set: updatedTask, $unset: { completedAt: "" } },
+                );
+            } else {
+                result = await tasks.updateOne(
+                    { _id: new ObjectId(req.params.id) },
+                    { $set: updatedTask }
+                );
+            }
+            if (result!.modifiedCount == 0) return res.json({ "message": "No task modified!" });
             res.json({ message: "Task Updated!" });
         } catch (err) {
             res.status(500).send("Error updating task");
