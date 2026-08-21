@@ -3,7 +3,7 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import cors from "cors";
-import taskRoutes from "./routes/tasks.ts";
+import taskRoutes from "./routes/tasks.js";
 //IMPORTANT NOTE for local: tasks.ts, RMBR TO CHANGE TO tasks.js B4 DEPLOYMENT
 import { fileURLToPath } from "url";
 

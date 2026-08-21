@@ -18,6 +18,7 @@ export default function taskRoutes(db: Db) {
     const tasks = db.collection<TaskType>("tasks");
 
     router.get("/", async (req, res) => {
+        res.setHeader("Cache-Control", "no-store");
         try {
             const filter: any = {};
             if (req.query.in_progress) {
@@ -36,6 +37,7 @@ export default function taskRoutes(db: Db) {
     });
 
     router.post("/", async (req, res) => {
+        res.setHeader("Cache-Control", "no-store");
         try {
             const parseResult = TaskSchema.safeParse(req.body);
             if (!parseResult.success) {
@@ -50,6 +52,7 @@ export default function taskRoutes(db: Db) {
     });
 
     router.patch("/:id", async (req, res) => {
+        res.setHeader("Cache-Control", "no-store");
         try {
             const parseResult = TaskSchema.partial().safeParse(req.body);
             if (!parseResult.success) {
@@ -76,6 +79,7 @@ export default function taskRoutes(db: Db) {
     });
 
     router.delete("/:id", async (req, res) => {
+        res.setHeader("Cache-Control", "no-store");
         try {
             const result = await tasks.deleteOne({ _id: new ObjectId(req.params.id) });
             if (result.deletedCount == 0) {
