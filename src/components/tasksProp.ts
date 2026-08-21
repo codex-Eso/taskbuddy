@@ -5,4 +5,6 @@ export interface Task {
     title: string;
     description: string;
     completed: boolean;
+    in_progress: boolean;
+    completedAt?: Date;
 }
