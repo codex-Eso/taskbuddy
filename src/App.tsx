@@ -55,7 +55,7 @@ function App() {
                         })}
                     </div>
                     {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} apiCall={apiCall} />}
-                    {apiCall === "?completed=true" && <span id='completedNote'>Note: All completed tasks stored will be deleted after 3 days</span>}
+                    {apiCall === "?completed=true" && <span id='completedNote'>Note: All completed tasks will be deleted after 3 days</span>}
                     <Buttons />
                 </>}
         </>
