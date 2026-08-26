@@ -24,7 +24,7 @@ function App() {
     useEffect(() => {
         const taskOnload = async () => {
             try {
-                const res = await api.get(`/tasks${apiCall}?ts=${Date.now()}`);
+                const res = await api.get(`/tasks${apiCall}`);
                 setTasks(res.data);
                 if (res.data.length != 0) {
                     setIsEmpty(false);
