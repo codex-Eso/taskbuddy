@@ -1,4 +1,5 @@
-.formContainer {
+.formContainer,
+.passwordContainer {
     background: url("../../assets/container.png") center/cover no-repeat;
     height: 400px;
     width: 400px;
@@ -12,7 +13,13 @@
     justify-content: center;
 }
 
-.formField {
+.passwordContainer {
+    background: white;
+    height: 200px;
+}
+
+.formField,
+.passwordField {
     margin-top: 15%;
     width: 350px;
     display: flex;
@@ -20,14 +27,20 @@
     gap: 20px;
 }
 
-.formField label {
+.passwordField {
+    margin-top: 8%;
+}
+
+.formField label,
+.passwordField label {
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
     color: black;
     font-size: 24px;
 }
 
-.formField input {
+.formField input,
+.passwordField input {
     font-family: 'Quicksand', sans-serif;
     outline: none;
     font-size: 18px;
@@ -39,7 +52,8 @@
     font-weight: 600;
 }
 
-.formField button {
+.formField button,
+.passwordField button {
     cursor: pointer;
     font-size: large;
     width: 30%;
@@ -50,12 +64,19 @@
 }
 
 @media (max-width: 480px) {
-    .formContainer {
+
+    .formContainer,
+    .passwordContainer {
         height: 340px;
         width: 340px;
     }
 
-    .formField {
+    .passwordContainer {
+        height: 190px;
+    }
+
+    .formField,
+    .passwordField {
         width: 290px;
         margin-top: 8%;
     }
