@@ -10,6 +10,7 @@ import Buttons from './components/Buttons.js';
 import { Analytics } from "@vercel/analytics/react";
 import ErrorState from './components/states/ErrorState.js';
 import Dropdown from './components/Dropdown.js';
+import Password from './components/inputs/Password.js';
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -21,43 +22,50 @@ function App() {
     const [error, setError] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
     const [apiCall, setApiCall] = useState<string>("?completed=false");
-    useEffect(() => {
-        const taskOnload = async () => {
-            try {
-                const res = await api.get(`/tasks${apiCall}`);
-                setTasks(res.data);
-                if (res.data.length != 0) {
-                    setIsEmpty(false);
-                } else {
-                    setIsEmpty(true);
-                }
-            } catch (err) {
-                console.error(err);
-                setError(true);
-            } finally {
-                setLoading(false);
+    const [access, setAccess] = useState<boolean>(false);
+    const taskOnload = async () => {
+        try {
+            const res = await api.get(`/tasks${apiCall}`);
+            setTasks(res.data);
+            if (res.data.length != 0) {
+                setIsEmpty(false);
+            } else {
+                setIsEmpty(true);
             }
+        } catch (err) {
+            console.error(err);
+            setError(true);
+        } finally {
+            setLoading(false);
         }
-        taskOnload();
-    }, [apiCall]);
+    }
+    useEffect(() => {
+        if (access) {
+            taskOnload();
+        }
+    }, [apiCall, access]);
     return (
         <>
             <Analytics />
-            {loading && <LoadingState />}
-            {error && <ErrorState />}
-            {(!loading && !error) &&
-                <>
-                    <Dropdown open={open} setOpen={setOpen} setApiCall={setApiCall} />
-                    <div id='taskContainer' ref={containerRef}>
-                        {isEmpty == true && <EmptyState />}
-                        {isEmpty == false && tasks.map((task) => {
-                            return <TaskState key={task._id.toString()} taskDetails={task} containerRef={containerRef} onSelect={() => { setCurrentTask(task); setOverlay(true); }} />
-                        })}
-                    </div>
-                    {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} apiCall={apiCall} />}
-                    {apiCall === "?completed=true" && <span id='completedNote'>Note: All completed tasks will be deleted after 3 days</span>}
-                    <Buttons />
-                </>}
+            {
+                access ? <>
+                    {loading && <LoadingState />}
+                    {error && <ErrorState />}
+                    {(!loading && !error) &&
+                        <>
+                            <Dropdown open={open} setOpen={setOpen} setApiCall={setApiCall} />
+                            <div id='taskContainer' ref={containerRef}>
+                                {isEmpty == true && <EmptyState />}
+                                {isEmpty == false && tasks.map((task) => {
+                                    return <TaskState key={task._id.toString()} taskDetails={task} containerRef={containerRef} onSelect={() => { setCurrentTask(task); setOverlay(true); }} />
+                                })}
+                            </div>
+                            {overlay && <ActiveTaskState currentTask={currentTask} setOverlay={setOverlay} apiCall={apiCall} />}
+                            {apiCall === "?completed=true" && <span id='completedNote'>Note: All completed tasks will be deleted after 3 days</span>}
+                            <Buttons />
+                        </>}
+                </> : <Password setOverlay={setOverlay} setAccess={setAccess} />
+            }
         </>
     )
 }
